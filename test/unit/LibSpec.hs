@@ -7,7 +7,7 @@ import           Test.Hspec
 
 spec :: Spec
 spec = do
-  describe "testToLetters" $ do
+  describe "toLetters" $ do
     it "should return empty list with empty string" $ do
       toLetters "" `shouldBe` []
 
