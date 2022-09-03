@@ -2,11 +2,11 @@ module LibSpec
   ( spec
   ) where
 
-import           Data.String.Utils
--- import           Test.HUnit
+import           Lib
+import           Test.HUnit
 import           Test.Hspec
+import           Test.Hspec.Contrib.HUnit
 
-{-  TODO - Do we want to launch "legacy"  HUnit tests?
 testToLetters :: Test
 testToLetters = TestCase
   (assertEqual "toLetters with actual word"
@@ -17,10 +17,11 @@ testToLetters = TestCase
 testToLettersWithEmptyString :: Test
 testToLettersWithEmptyString =
   TestCase (assertEqual "toLetters with empty string" [] (toLetters ""))
--}
+
+testSuite :: Test
+testSuite = TestList [testToLetters, testToLettersWithEmptyString]
 
 spec :: Spec
 spec = do
-  describe "strip" $ do
-    it "removes leading and trailing whitespace" $ do
-      strip "\t  foo bar\n" `shouldBe` "foo bar"
+  describe "running legacy HUnit tests" $ do
+    fromHUnitTest testSuite

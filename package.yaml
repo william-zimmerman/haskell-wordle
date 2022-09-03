@@ -60,4 +60,5 @@ tests:
     - HUnit
     - hspec
     - hspec-discover
-    - MissingH
+    - hspec-contrib
+    
