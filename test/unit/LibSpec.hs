@@ -38,13 +38,17 @@ spec = do
       [] `without` Letter 'w' 1 `shouldBe` []
 
     it "should remove the letter if present in the list" $ do
-      [Letter 'a' 5, Letter 'b' 3] `without` Letter 'b' 3 `shouldBe` [Letter 'a' 5]
+      [Letter 'a' 5, Letter 'b' 3]
+        `without`  Letter 'b' 3
+        `shouldBe` [Letter 'a' 5]
 
     it "should remove the only element in the list if it matches" $ do
       [Letter 'z' 10] `without` Letter 'z' 10 `shouldBe` []
 
     it "shouldn't make any changes to list if element is not present" $ do
-      [Letter 'a' 1, Letter 'b' 2] `without` Letter 'a' 2 `shouldBe` [Letter 'a' 1, Letter 'b' 2]
+      [Letter 'a' 1, Letter 'b' 2]
+        `without`  Letter 'a' 2
+        `shouldBe` [Letter 'a' 1, Letter 'b' 2]
 
   describe "getLettersInIncorrectPosition" $ do
     it "should return an empty list with empty list inputs" $ do
@@ -53,33 +57,57 @@ spec = do
     it "should return an empty list when there are no letters to match on" $ do
       getLettersInIncorrectPosition [] [Letter 'a' 1] `shouldBe` []
 
-    it "should return an empty list when we're not looking for any letters to match" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1] [] `shouldBe` []
+    it
+        "should return an empty list when we're not looking for any letters to match"
+      $ do
+          getLettersInIncorrectPosition [Letter 'a' 1] [] `shouldBe` []
 
     it "should return empty list when no characters match" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1, Letter 'b' 2] [Letter 'y' 1, Letter 'z' 2] `shouldBe` []
+      getLettersInIncorrectPosition [Letter 'a' 1, Letter 'b' 2]
+                                    [Letter 'y' 1, Letter 'z' 2]
+        `shouldBe` []
 
     it "should return letter with matching character but different index" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1] [Letter 'a' 2] `shouldBe` [Letter 'a' 2]
+      getLettersInIncorrectPosition [Letter 'a' 1] [Letter 'a' 2]
+        `shouldBe` [Letter 'a' 2]
 
     it "should not return letter when character and index both match" $ do
       getLettersInIncorrectPosition [Letter 'a' 1] [Letter 'a' 1] `shouldBe` []
 
-    it "should only return one letter in incorrect position when there are repeating letters in guess" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1, Letter 'b' 2] [Letter 'a' 2, Letter 'a' 3] `shouldBe` [Letter 'a' 2]
+    it
+        "should only return one letter in incorrect position when there are repeating letters in guess"
+      $ do
+          getLettersInIncorrectPosition [Letter 'a' 1, Letter 'b' 2]
+                                        [Letter 'a' 2, Letter 'a' 3]
+            `shouldBe` [Letter 'a' 2]
 
-    it "should return all letters in incorrect position where there are more than one" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3] [Letter 'c' 1, Letter 'a' 2, Letter 'b' 3] `shouldBe` [Letter 'c' 1, Letter 'a' 2, Letter 'b' 3]
+    it
+        "should return all letters in incorrect position where there are more than one"
+      $ do
+          getLettersInIncorrectPosition
+              [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
+              [Letter 'c' 1, Letter 'a' 2, Letter 'b' 3]
+            `shouldBe` [Letter 'c' 1, Letter 'a' 2, Letter 'b' 3]
 
-    it "should return repeating characters in the wrong position when there are more than one in the answer" $ do
-      getLettersInIncorrectPosition [Letter 'a' 1, Letter 'a' 2] [Letter 'a' 3, Letter 'a' 4] `shouldBe` [Letter 'a' 3, Letter 'a' 4]
-    
+    it
+        "should return repeating characters in the wrong position when there are more than one in the answer"
+      $ do
+          getLettersInIncorrectPosition [Letter 'a' 1, Letter 'a' 2]
+                                        [Letter 'a' 3, Letter 'a' 4]
+            `shouldBe` [Letter 'a' 3, Letter 'a' 4]
+
   describe "withoutAll" $ do
     it "should remove all letters from source" $ do
-      ([Letter 'a' 1, Letter 'b' 2, Letter 'c' 3] `withoutAll` [Letter 'a' 1, Letter 'c' 3]) `shouldBe` [Letter 'b' 2]
-    
+      (            [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
+        `withoutAll` [Letter 'a' 1, Letter 'c' 3]
+        )
+        `shouldBe` [Letter 'b' 2]
+
     it "should remove all letters if source is subset of values to remove" $ do
-      ([Letter 'a' 1, Letter 'b' 2] `withoutAll` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]) `shouldBe` []
+      (            [Letter 'a' 1, Letter 'b' 2]
+        `withoutAll` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
+        )
+        `shouldBe` []
 
   describe "makeGuess" $ do
     it

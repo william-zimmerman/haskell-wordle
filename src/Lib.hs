@@ -82,7 +82,12 @@ getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
       Letter guessChar guessIndex
         : getLettersInIncorrectPosition (answer `without` answerLetter) xs
     )
-    (find (\(Letter answerChar answerIndex) -> guessChar == answerChar && guessIndex /= answerIndex) answer)
+    (find
+      (\(Letter answerChar answerIndex) ->
+        guessChar == answerChar && guessIndex /= answerIndex
+      )
+      answer
+    )
 
 makeGuess :: String -> String -> [LetterEval]
 makeGuess answer guess =
