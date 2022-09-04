@@ -69,7 +69,7 @@ without = foldl withoutElem
  where
   withoutElem [] _ = []
   withoutElem (x : xs) value | x == value = xs
-                             | otherwise  = x : (xs `without` [value])
+                             | otherwise  = x : (xs `withoutElem` value)
 
 getLettersInIncorrectPosition :: [Letter] -> [Letter] -> [Letter]
 getLettersInIncorrectPosition _ [] = []
