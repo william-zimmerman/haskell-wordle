@@ -35,20 +35,32 @@ spec = do
 
   describe "without" $ do
     it "should return an empty list when given an empty list" $ do
-      [] `without` Letter 'w' 1 `shouldBe` []
+      [] `without` [Letter 'w' 1] `shouldBe` []
+
+    it "should return source when looking for empty list" $ do
+      [Letter 'a' 1] `without` [] `shouldBe` [Letter 'a' 1]
 
     it "should remove the letter if present in the list" $ do
       [Letter 'a' 5, Letter 'b' 3]
-        `without`  Letter 'b' 3
+        `without`  [Letter 'b' 3]
         `shouldBe` [Letter 'a' 5]
-
-    it "should remove the only element in the list if it matches" $ do
-      [Letter 'z' 10] `without` Letter 'z' 10 `shouldBe` []
 
     it "shouldn't make any changes to list if element is not present" $ do
       [Letter 'a' 1, Letter 'b' 2]
-        `without`  Letter 'a' 2
+        `without`  [Letter 'a' 2]
         `shouldBe` [Letter 'a' 1, Letter 'b' 2]
+
+    it "should remove all letters from source" $ do
+      (         [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
+        `without` [Letter 'a' 1, Letter 'c' 3]
+        )
+        `shouldBe` [Letter 'b' 2]
+
+    it "should remove all letters if source is subset of values to remove" $ do
+      (         [Letter 'a' 1, Letter 'b' 2]
+        `without` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
+        )
+        `shouldBe` []
 
   describe "getLettersInIncorrectPosition" $ do
     it "should return an empty list with empty list inputs" $ do
@@ -95,19 +107,6 @@ spec = do
           getLettersInIncorrectPosition [Letter 'a' 1, Letter 'a' 2]
                                         [Letter 'a' 3, Letter 'a' 4]
             `shouldBe` [Letter 'a' 3, Letter 'a' 4]
-
-  describe "withoutAll" $ do
-    it "should remove all letters from source" $ do
-      (            [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
-        `withoutAll` [Letter 'a' 1, Letter 'c' 3]
-        )
-        `shouldBe` [Letter 'b' 2]
-
-    it "should remove all letters if source is subset of values to remove" $ do
-      (            [Letter 'a' 1, Letter 'b' 2]
-        `withoutAll` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]
-        )
-        `shouldBe` []
 
   describe "makeGuess" $ do
     it

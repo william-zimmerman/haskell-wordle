@@ -2,9 +2,8 @@ module Lib
   ( guessFromString
   , getLettersInCorrectPosition
   , toLetters
-  , without
   , getLettersInIncorrectPosition
-  , withoutAll
+  , without
   , makeGuess
   , Letter(..)
   , Guess(..)
@@ -65,13 +64,12 @@ getLettersInCorrectPosition answer guess =
   , answerLetter == guessLetter
   ]
 
-without :: [Letter] -> Letter -> [Letter]
-without [] _ = []
-without (x : xs) value | x == value = xs
-                       | otherwise  = x : (xs `without` value)
-
-withoutAll :: [Letter] -> [Letter] -> [Letter]
-withoutAll = foldl without
+without :: [Letter] -> [Letter] -> [Letter]
+without = foldl withoutElem
+ where
+  withoutElem [] _ = []
+  withoutElem (x : xs) value | x == value = xs
+                             | otherwise  = x : (xs `without` [value])
 
 getLettersInIncorrectPosition :: [Letter] -> [Letter] -> [Letter]
 getLettersInIncorrectPosition _ [] = []
@@ -80,7 +78,7 @@ getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
     (getLettersInIncorrectPosition answer xs)
     (\answerLetter ->
       Letter guessChar guessIndex
-        : getLettersInIncorrectPosition (answer `without` answerLetter) xs
+        : getLettersInIncorrectPosition (answer `without` [answerLetter]) xs
     )
     (find
       (\(Letter answerChar answerIndex) ->
@@ -103,8 +101,8 @@ makeGuess answer guess =
   lettersInCorrectPosition =
     getLettersInCorrectPosition answerLetters guessLetters
   lettersInIncorrectPosition = getLettersInIncorrectPosition
-    (answerLetters `withoutAll` lettersInCorrectPosition)
-    (guessLetters `withoutAll` lettersInCorrectPosition)
+    (answerLetters `without` lettersInCorrectPosition)
+    (guessLetters `without` lettersInCorrectPosition)
   lettersNotInAnswer =
-    (guessLetters `withoutAll` lettersInCorrectPosition)
-      `withoutAll` lettersInIncorrectPosition
+    (guessLetters `without` lettersInCorrectPosition)
+      `without` lettersInIncorrectPosition
