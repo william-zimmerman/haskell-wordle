@@ -2,9 +2,13 @@ module Lib
   ( guessFromString
   , getLettersInCorrectPosition
   , toLetters
+  , without
+  , getLettersInIncorrectPosition
   , Letter(..)
   , Guess(..)
   ) where
+
+import           Data.List
 
 data Status = NotInAnswer | IncorrectPosition | CorrectPosition
   deriving(Eq, Show)
@@ -56,3 +60,20 @@ getLettersInCorrectPosition answer guess =
   , guessLetter  <- guess
   , answerLetter == guessLetter
   ]
+
+without :: [Letter] -> Letter -> [Letter]
+without [] _ = []
+without (x : xs) value | x == value = xs
+                       | otherwise  = x : (xs `without` value)
+
+getLettersInIncorrectPosition :: [Letter] -> [Letter] -> [Letter]
+getLettersInIncorrectPosition _ [] = []
+getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
+  maybe
+    (getLettersInIncorrectPosition answer xs)
+    (\answerLetter ->
+      Letter guessChar guessIndex
+        : getLettersInIncorrectPosition (answer `without` answerLetter) xs
+    )
+    (find (\(Letter answerChar answerIndex) -> guessChar == answerChar && guessIndex /= answerIndex) answer)
+
