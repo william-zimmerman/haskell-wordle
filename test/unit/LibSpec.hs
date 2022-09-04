@@ -80,3 +80,26 @@ spec = do
     
     it "should remove all letters if source is subset of values to remove" $ do
       ([Letter 'a' 1, Letter 'b' 2] `withoutAll` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]) `shouldBe` []
+
+  describe "makeGuess" $ do
+    it
+        "should return list with letters not in answer when guess does not overlap with answer"
+      $ do
+          makeGuess "bat" "hop"
+            `shouldBe` [ LetterEval 'h' NotInAnswer 1
+                       , LetterEval 'o' NotInAnswer 2
+                       , LetterEval 'p' NotInAnswer 3
+                       ]
+
+    it
+        "should return list with letters in correct place when guess equals answer"
+      $ do
+          makeGuess "william" "william"
+            `shouldBe` [ LetterEval 'w' CorrectPosition 1
+                       , LetterEval 'i' CorrectPosition 2
+                       , LetterEval 'l' CorrectPosition 3
+                       , LetterEval 'l' CorrectPosition 4
+                       , LetterEval 'i' CorrectPosition 5
+                       , LetterEval 'a' CorrectPosition 6
+                       , LetterEval 'm' CorrectPosition 7
+                       ]

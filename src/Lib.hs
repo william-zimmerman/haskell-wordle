@@ -5,8 +5,11 @@ module Lib
   , without
   , getLettersInIncorrectPosition
   , withoutAll
+  , makeGuess
   , Letter(..)
   , Guess(..)
+  , LetterEval(..)
+  , Status(..)
   ) where
 
 import           Data.List
@@ -81,3 +84,22 @@ getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
     )
     (find (\(Letter answerChar answerIndex) -> guessChar == answerChar && guessIndex /= answerIndex) answer)
 
+makeGuess :: String -> String -> [LetterEval]
+makeGuess answer guess =
+  map (\(Letter char index) -> LetterEval char CorrectPosition index)
+      lettersInCorrectPosition
+    ++ map (\(Letter char index) -> LetterEval char IncorrectPosition index)
+           lettersInIncorrectPosition
+    ++ map (\(Letter char index) -> LetterEval char NotInAnswer index)
+           lettersNotInAnswer
+ where
+  answerLetters = toLetters answer
+  guessLetters  = toLetters guess
+  lettersInCorrectPosition =
+    getLettersInCorrectPosition answerLetters guessLetters
+  lettersInIncorrectPosition = getLettersInIncorrectPosition
+    (answerLetters `withoutAll` lettersInCorrectPosition)
+    (guessLetters `withoutAll` lettersInCorrectPosition)
+  lettersNotInAnswer =
+    (guessLetters `withoutAll` lettersInCorrectPosition)
+      `withoutAll` lettersInIncorrectPosition
