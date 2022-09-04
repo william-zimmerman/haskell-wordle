@@ -4,6 +4,7 @@ module Lib
   , toLetters
   , without
   , getLettersInIncorrectPosition
+  , withoutAll
   , Letter(..)
   , Guess(..)
   ) where
@@ -65,6 +66,9 @@ without :: [Letter] -> Letter -> [Letter]
 without [] _ = []
 without (x : xs) value | x == value = xs
                        | otherwise  = x : (xs `without` value)
+
+withoutAll :: [Letter] -> [Letter] -> [Letter]
+withoutAll = foldl without
 
 getLettersInIncorrectPosition :: [Letter] -> [Letter] -> [Letter]
 getLettersInIncorrectPosition _ [] = []

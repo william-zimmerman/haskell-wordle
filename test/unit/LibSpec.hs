@@ -73,3 +73,10 @@ spec = do
 
     it "should return repeating characters in the wrong position when there are more than one in the answer" $ do
       getLettersInIncorrectPosition [Letter 'a' 1, Letter 'a' 2] [Letter 'a' 3, Letter 'a' 4] `shouldBe` [Letter 'a' 3, Letter 'a' 4]
+    
+  describe "withoutAll" $ do
+    it "should remove all letters from source" $ do
+      ([Letter 'a' 1, Letter 'b' 2, Letter 'c' 3] `withoutAll` [Letter 'a' 1, Letter 'c' 3]) `shouldBe` [Letter 'b' 2]
+    
+    it "should remove all letters if source is subset of values to remove" $ do
+      ([Letter 'a' 1, Letter 'b' 2] `withoutAll` [Letter 'a' 1, Letter 'b' 2, Letter 'c' 3]) `shouldBe` []
