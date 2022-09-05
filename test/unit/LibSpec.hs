@@ -130,3 +130,12 @@ spec = do
                        , LetterEval 6 'a' CorrectPosition
                        , LetterEval 7 'm' CorrectPosition
                        ]
+
+    it "should return list of letter evals in order of their index" $ do
+      makeGuess "spend" "waxed"
+        `shouldBe` [ LetterEval 1 'w' NotInAnswer
+                   , LetterEval 2 'a' NotInAnswer
+                   , LetterEval 3 'x' NotInAnswer
+                   , LetterEval 4 'e' IncorrectPosition
+                   , LetterEval 5 'd' CorrectPosition
+                   ]

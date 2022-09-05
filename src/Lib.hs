@@ -11,7 +11,9 @@ module Lib
   , Status(..)
   ) where
 
-import           Data.List                      ( find )
+import           Data.List                      ( find
+                                                , sort
+                                                )
 
 data Status = NotInAnswer | IncorrectPosition | CorrectPosition
   deriving(Eq, Show)
@@ -23,6 +25,9 @@ data Letter = Letter Index Char
 
 data LetterEval = LetterEval Index Char Status
   deriving (Eq, Show)
+
+instance Ord LetterEval where
+  (<=) (LetterEval indexN _ _) (LetterEval indexM _ _) = indexN <= indexM
 
 data Guess = Guess
   { firstLetter  :: Char
@@ -74,10 +79,13 @@ getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
       answer
     )
 
+-- TODO: It feels weird that this is sorting the return value; 
+-- ideally this should return a set that the caller can sort if needed
 makeGuess :: String -> String -> [LetterEval]
 makeGuess answer guess =
-  map (\(Letter index char) -> LetterEval index char CorrectPosition)
-      lettersInCorrectPosition
+  sort
+    $  map (\(Letter index char) -> LetterEval index char CorrectPosition)
+           lettersInCorrectPosition
     ++ map (\(Letter index char) -> LetterEval index char IncorrectPosition)
            lettersInIncorrectPosition
     ++ map (\(Letter index char) -> LetterEval index char NotInAnswer)
