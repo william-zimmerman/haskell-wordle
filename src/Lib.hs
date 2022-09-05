@@ -11,14 +11,15 @@ module Lib
   , Status(..)
   ) where
 
-import           Data.List
+import           Data.List                      ( find )
 
 data Status = NotInAnswer | IncorrectPosition | CorrectPosition
   deriving(Eq, Show)
+type Index = Int
 type Position = Int
 data LetterEval = LetterEval Char Status Position
   deriving (Eq, Show)
-data Letter = Letter Char Int
+data Letter = Letter Index Char
   deriving (Eq, Show)
 
 data WordEval = WordEval LetterEval
@@ -43,18 +44,9 @@ data Guess = Guess
 guessFromString :: String -> Guess
 guessFromString s = Guess (head s) (s !! 1) (s !! 2) (s !! 3) (s !! 4)
 
-guessIntoCharAndPosition :: Guess -> [(Char, Int)]
-guessIntoCharAndPosition (Guess a b c d e) = zip [a, b, c, d, e] [1 .. 5]
-
-guessIntoLetters :: Guess -> [Letter]
-guessIntoLetters guess =
-  [ Letter character position
-  | (character, position) <- guessIntoCharAndPosition guess
-  ]
-
 toLetters :: String -> [Letter] -- TODO: It feels like this should be a set?
 toLetters s =
-  map (\(character, index) -> Letter character index) (zip s [1 .. (length s)])
+  map (\(character, index) -> Letter index character) (zip s [1 .. (length s)])
 
 getLettersInCorrectPosition :: [Letter] -> [Letter] -> [Letter] -- TODO: Introduce Guess and Answer types here
 getLettersInCorrectPosition answer guess =
@@ -64,24 +56,27 @@ getLettersInCorrectPosition answer guess =
   , answerLetter == guessLetter
   ]
 
+-- Haskell wiki thinks the last parameter should be the one we're operating on - 
+-- https://wiki.haskell.org/Parameter_order
 without :: [Letter] -> [Letter] -> [Letter]
 without = foldl withoutElem
  where
   withoutElem [] _ = []
-  withoutElem (x : xs) value | x == value = xs
+  withoutElem (x : xs) value | -- This doesn't work when there are multiple, identical Letters in source list 
+                               x == value = xs
                              | otherwise  = x : (xs `withoutElem` value)
 
 getLettersInIncorrectPosition :: [Letter] -> [Letter] -> [Letter]
 getLettersInIncorrectPosition _ [] = []
-getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
+getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
   maybe
     (getLettersInIncorrectPosition answer xs)
     (\answerLetter ->
-      Letter guessChar guessIndex
+      Letter guessIndex guessChar
         : getLettersInIncorrectPosition (answer `without` [answerLetter]) xs
     )
     (find
-      (\(Letter answerChar answerIndex) ->
+      (\(Letter answerIndex answerChar) ->
         guessChar == answerChar && guessIndex /= answerIndex
       )
       answer
@@ -89,11 +84,11 @@ getLettersInIncorrectPosition answer ((Letter guessChar guessIndex) : xs) =
 
 makeGuess :: String -> String -> [LetterEval]
 makeGuess answer guess =
-  map (\(Letter char index) -> LetterEval char CorrectPosition index)
+  map (\(Letter index char) -> LetterEval char CorrectPosition index)
       lettersInCorrectPosition
-    ++ map (\(Letter char index) -> LetterEval char IncorrectPosition index)
+    ++ map (\(Letter index char) -> LetterEval char IncorrectPosition index)
            lettersInIncorrectPosition
-    ++ map (\(Letter char index) -> LetterEval char NotInAnswer index)
+    ++ map (\(Letter index char) -> LetterEval char NotInAnswer index)
            lettersNotInAnswer
  where
   answerLetters = toLetters answer
