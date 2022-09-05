@@ -15,22 +15,14 @@ import           Data.List                      ( find )
 
 data Status = NotInAnswer | IncorrectPosition | CorrectPosition
   deriving(Eq, Show)
+
 type Index = Int
-type Position = Int
-data LetterEval = LetterEval Char Status Position
-  deriving (Eq, Show)
+
 data Letter = Letter Index Char
   deriving (Eq, Show)
 
-data WordEval = WordEval LetterEval
-                         LetterEval
-                         LetterEval
-                         LetterEval
-                         LetterEval
-
-getLetterEvals :: WordEval -> [LetterEval]
-getLetterEvals (WordEval one two three four five) =
-  [one, two, three, four, five]
+data LetterEval = LetterEval Index Char Status
+  deriving (Eq, Show)
 
 data Guess = Guess
   { firstLetter  :: Char
@@ -84,11 +76,11 @@ getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
 
 makeGuess :: String -> String -> [LetterEval]
 makeGuess answer guess =
-  map (\(Letter index char) -> LetterEval char CorrectPosition index)
+  map (\(Letter index char) -> LetterEval index char CorrectPosition)
       lettersInCorrectPosition
-    ++ map (\(Letter index char) -> LetterEval char IncorrectPosition index)
+    ++ map (\(Letter index char) -> LetterEval index char IncorrectPosition)
            lettersInIncorrectPosition
-    ++ map (\(Letter index char) -> LetterEval char NotInAnswer index)
+    ++ map (\(Letter index char) -> LetterEval index char NotInAnswer)
            lettersNotInAnswer
  where
   answerLetters = toLetters answer

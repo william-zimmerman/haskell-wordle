@@ -113,20 +113,20 @@ spec = do
         "should return list with letters not in answer when guess does not overlap with answer"
       $ do
           makeGuess "bat" "hop"
-            `shouldBe` [ LetterEval 'h' NotInAnswer 1
-                       , LetterEval 'o' NotInAnswer 2
-                       , LetterEval 'p' NotInAnswer 3
+            `shouldBe` [ LetterEval 1 'h' NotInAnswer
+                       , LetterEval 2 'o' NotInAnswer
+                       , LetterEval 3 'p' NotInAnswer
                        ]
 
     it
         "should return list with letters in correct place when guess equals answer"
       $ do
           makeGuess "william" "william"
-            `shouldBe` [ LetterEval 'w' CorrectPosition 1
-                       , LetterEval 'i' CorrectPosition 2
-                       , LetterEval 'l' CorrectPosition 3
-                       , LetterEval 'l' CorrectPosition 4
-                       , LetterEval 'i' CorrectPosition 5
-                       , LetterEval 'a' CorrectPosition 6
-                       , LetterEval 'm' CorrectPosition 7
+            `shouldBe` [ LetterEval 1 'w' CorrectPosition
+                       , LetterEval 2 'i' CorrectPosition
+                       , LetterEval 3 'l' CorrectPosition
+                       , LetterEval 4 'l' CorrectPosition
+                       , LetterEval 5 'i' CorrectPosition
+                       , LetterEval 6 'a' CorrectPosition
+                       , LetterEval 7 'm' CorrectPosition
                        ]
