@@ -139,3 +139,15 @@ spec = do
                    , LetterEval 4 'e' IncorrectPosition
                    , LetterEval 5 'd' CorrectPosition
                    ]
+
+    it
+        "should mark the first repeated letter in guess as IncorrectPosition and the second as NotInAnswer"
+      $ do
+          makeGuess "planet" "apples"
+            `shouldBe` [ LetterEval 1 'a' IncorrectPosition
+                       , LetterEval 2 'p' IncorrectPosition
+                       , LetterEval 3 'p' NotInAnswer
+                       , LetterEval 4 'l' IncorrectPosition
+                       , LetterEval 5 'e' CorrectPosition
+                       , LetterEval 6 's' NotInAnswer
+                       ]
