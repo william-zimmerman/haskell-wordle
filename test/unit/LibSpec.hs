@@ -152,12 +152,12 @@ spec = do
                        , LetterEval 6 's' NotInAnswer
                        ]
 
-  describe "isGuessCorrect" $ do
+  describe "guessIsCorrect" $ do
     it "should return false with an empty list" $ do
-      isGuessCorrect [] `shouldBe` False
+      guessIsCorrect [] `shouldBe` False
 
     it "should return true if all elements are in correct position" $ do
-      isGuessCorrect
+      guessIsCorrect
           [ LetterEval 1 'a' CorrectPosition
           , LetterEval 2 'b' CorrectPosition
           , LetterEval 3 'c' CorrectPosition
@@ -165,10 +165,10 @@ spec = do
         `shouldBe` True
 
     it "should return false if single element is not in answer" $ do
-      isGuessCorrect
+      guessIsCorrect
         [LetterEval 1 'a' CorrectPosition, LetterEval 2 'b' NotInAnswer]
         `shouldBe` False
     
     it "should return false if single element is in incorrect position" $ do
-      isGuessCorrect [LetterEval 1 'a' CorrectPosition, LetterEval 2 'b' IncorrectPosition]
+      guessIsCorrect [LetterEval 1 'a' CorrectPosition, LetterEval 2 'b' IncorrectPosition]
       `shouldBe` False

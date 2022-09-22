@@ -4,7 +4,7 @@ module Lib
   , getLettersInIncorrectPosition
   , without
   , evaluateGuess
-  , isGuessCorrect
+  , guessIsCorrect
   , Letter(..)
   , LetterEval(..)
   , Status(..)
@@ -94,6 +94,6 @@ evaluateGuess answer guess =
     (guessLetters `without` lettersInCorrectPosition)
       `without` lettersInIncorrectPosition
 
-isGuessCorrect :: [LetterEval] -> Bool
-isGuessCorrect [] = False
-isGuessCorrect xs = all (\ (LetterEval _ _ status) -> status == CorrectPosition) xs
+guessIsCorrect :: [LetterEval] -> Bool
+guessIsCorrect [] = False
+guessIsCorrect xs = all (\ (LetterEval _ _ status) -> status == CorrectPosition) xs
