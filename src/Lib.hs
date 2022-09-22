@@ -1,14 +1,14 @@
 module Lib
-  ( guessFromString
-  , getLettersInCorrectPosition
+  ( getLettersInCorrectPosition
   , toLetters
   , getLettersInIncorrectPosition
   , without
   , makeGuess
   , Letter(..)
-  , Guess(..)
   , LetterEval(..)
   , Status(..)
+  , Answer
+  , Guess
   ) where
 
 import           Data.List                      ( find
@@ -19,6 +19,8 @@ data Status = NotInAnswer | IncorrectPosition | CorrectPosition
   deriving(Eq, Show)
 
 type Index = Int
+type Answer = String
+type Guess = String
 
 data Letter = Letter Index Char
   deriving (Eq, Show)
@@ -28,18 +30,6 @@ data LetterEval = LetterEval Index Char Status
 
 instance Ord LetterEval where
   (<=) (LetterEval indexN _ _) (LetterEval indexM _ _) = indexN <= indexM
-
-data Guess = Guess
-  { firstLetter  :: Char
-  , secondLetter :: Char
-  , thirdLetter  :: Char
-  , fourthLetter :: Char
-  , fifthLetter  :: Char
-  }
-  deriving (Show, Eq)
-
-guessFromString :: String -> Guess
-guessFromString s = Guess (head s) (s !! 1) (s !! 2) (s !! 3) (s !! 4)
 
 toLetters :: String -> [Letter] -- TODO: It feels like this should be a set?
 toLetters s =
@@ -81,7 +71,8 @@ getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
 
 -- TODO: It feels weird that this is sorting the return value; 
 -- ideally this should return a set that the caller can sort if needed
-makeGuess :: String -> String -> [LetterEval]
+-- TODO: How are we going to handle case sensitivity
+makeGuess :: Answer -> Guess -> [LetterEval]
 makeGuess answer guess =
   sort
     $  map (\(Letter index char) -> LetterEval index char CorrectPosition)
