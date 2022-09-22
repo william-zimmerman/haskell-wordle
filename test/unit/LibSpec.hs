@@ -108,11 +108,11 @@ spec = do
                                         [Letter 3 'a', Letter 4 'a']
             `shouldBe` [Letter 3 'a', Letter 4 'a']
 
-  describe "makeGuess" $ do
+  describe "evaluateGuess" $ do
     it
         "should return list with letters not in answer when guess does not overlap with answer"
       $ do
-          makeGuess "bat" "hop"
+          evaluateGuess "bat" "hop"
             `shouldBe` [ LetterEval 1 'h' NotInAnswer
                        , LetterEval 2 'o' NotInAnswer
                        , LetterEval 3 'p' NotInAnswer
@@ -121,7 +121,7 @@ spec = do
     it
         "should return list with letters in correct place when guess equals answer"
       $ do
-          makeGuess "william" "william"
+          evaluateGuess "william" "william"
             `shouldBe` [ LetterEval 1 'w' CorrectPosition
                        , LetterEval 2 'i' CorrectPosition
                        , LetterEval 3 'l' CorrectPosition
@@ -132,7 +132,7 @@ spec = do
                        ]
 
     it "should return list of letter evals in order of their index" $ do
-      makeGuess "spend" "waxed"
+      evaluateGuess "spend" "waxed"
         `shouldBe` [ LetterEval 1 'w' NotInAnswer
                    , LetterEval 2 'a' NotInAnswer
                    , LetterEval 3 'x' NotInAnswer
@@ -143,7 +143,7 @@ spec = do
     it
         "should mark the first repeated letter in guess as IncorrectPosition and the second as NotInAnswer"
       $ do
-          makeGuess "planet" "apples"
+          evaluateGuess "planet" "apples"
             `shouldBe` [ LetterEval 1 'a' IncorrectPosition
                        , LetterEval 2 'p' IncorrectPosition
                        , LetterEval 3 'p' NotInAnswer

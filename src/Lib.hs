@@ -3,7 +3,7 @@ module Lib
   , toLetters
   , getLettersInIncorrectPosition
   , without
-  , makeGuess
+  , evaluateGuess
   , Letter(..)
   , LetterEval(..)
   , Status(..)
@@ -72,8 +72,8 @@ getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
 -- TODO: It feels weird that this is sorting the return value; 
 -- ideally this should return a set that the caller can sort if needed
 -- TODO: How are we going to handle case sensitivity
-makeGuess :: Answer -> Guess -> [LetterEval]
-makeGuess answer guess =
+evaluateGuess :: Answer -> Guess -> [LetterEval]
+evaluateGuess answer guess =
   sort
     $  map (\(Letter index char) -> LetterEval index char CorrectPosition)
            lettersInCorrectPosition
