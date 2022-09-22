@@ -22,20 +22,23 @@ mainLoop :: Answer -> IO ()
 mainLoop answer = do
   putStr "> "
   guess <- getLine
--- TODO: Add quit
-  let evaluation = evaluateGuess answer guess
-  if guessIsCorrect evaluation
+  if guess == ":q"
     then do
-      putStrLn "You solved Wordle!"
       return ()
     else do
-      putStrLn (formatEval evaluation)
-      mainLoop answer
+      let evaluation = evaluateGuess answer guess
+      if guessIsCorrect evaluation
+        then do
+          putStrLn "You solved Wordle!"
+          return ()
+        else do
+          putStrLn (formatEval evaluation)
+          mainLoop answer
 
 formatEval :: [LetterEval] -> String
 formatEval = concatMap
   (\(LetterEval _ char status) -> case status of
-    NotInAnswer       -> ['<',char,'>']
-    IncorrectPosition -> ['{',char,'}']
-    CorrectPosition   -> ['[',char,']']
-  ) 
+    NotInAnswer       -> ['<', char, '>']
+    IncorrectPosition -> ['{', char, '}']
+    CorrectPosition   -> ['[', char, ']']
+  )
