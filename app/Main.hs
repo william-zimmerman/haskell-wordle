@@ -27,13 +27,11 @@ mainLoop answer = do
   if guess == ":q"
     then do
       putStrLn ("The word was '" ++ answer ++ "'")
-      return ()
-    else do
-      let evaluation = evaluateGuess answer guess
+    else
+      let evaluation = evaluateGuess answer guess in 
       if guessIsCorrect evaluation
         then do
           putStrLn "You solved Wordle!"
-          return ()
         else do
           putStrLn (formatEval evaluation)
           mainLoop answer
