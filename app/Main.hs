@@ -26,6 +26,7 @@ mainLoop answer = do
   guess <- getLine
   if guess == ":q"
     then do
+      putStrLn ("The word was '" ++ answer ++ "'")
       return ()
     else do
       let evaluation = evaluateGuess answer guess
