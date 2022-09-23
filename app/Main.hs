@@ -4,19 +4,21 @@ module Main
 
 import           Lib
 import           System.IO
+import           System.Random
 
 main :: IO ()
 main = do
   hSetBuffering stdout NoBuffering
   putStrLn "Welcome to Worlde!"
-  answer <- getAnswer
+  answer <- getAnswerFromFile
   putStrLn "Enter guesses one at a time; :q to quit"
   mainLoop answer
 
-getAnswer :: IO String
-getAnswer = do
-  putStr "Enter the answer: "
-  getLine
+getAnswerFromFile :: IO String
+getAnswerFromFile = do
+  fileContents <- readFile "words.txt"
+  let allPotentialAnswers = lines fileContents
+  getRandomElement allPotentialAnswers
 
 mainLoop :: Answer -> IO ()
 mainLoop answer = do
@@ -42,3 +44,8 @@ formatEval = concatMap
     IncorrectPosition -> ['{', char, '}']
     CorrectPosition   -> ['[', char, ']']
   )
+
+getRandomElement :: [a] -> IO a
+getRandomElement xs = do 
+  index <- getStdRandom (randomR (0, length xs))
+  return (xs !! index)

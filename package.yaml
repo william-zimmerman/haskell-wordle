@@ -46,6 +46,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - haskell-wordle
+    - random
 
 tests:
   haskell-wordle-unit-test:
