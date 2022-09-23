@@ -7,3 +7,6 @@ apple
 grant
 peach
 heart
+front
+quest
+crown
