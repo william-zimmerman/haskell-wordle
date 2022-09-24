@@ -28,13 +28,13 @@ mainLoop answer = do
     then do
       putStrLn ("The word was '" ++ answer ++ "'")
     else
-      let evaluation = evaluateGuess answer guess in 
-      if guessIsCorrect evaluation
-        then do
-          putStrLn "You solved Wordle!"
-        else do
-          putStrLn (formatEval evaluation)
-          mainLoop answer
+      let evaluation = evaluateGuess answer guess
+      in  if guessIsCorrect evaluation
+            then do
+              putStrLn "You solved Wordle!"
+            else do
+              putStrLn (formatEval evaluation)
+              mainLoop answer
 
 formatEval :: [LetterEval] -> String
 formatEval = concatMap
@@ -45,6 +45,6 @@ formatEval = concatMap
   )
 
 getRandomElement :: [a] -> IO a
-getRandomElement xs = do 
+getRandomElement xs = do
   index <- getStdRandom (randomR (0, length xs))
   return (xs !! index)

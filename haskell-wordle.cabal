@@ -35,17 +35,29 @@ library
       base >=4.7 && <5
   default-language: Haskell2010
 
-executable haskell-wordle-exe
+executable wordle
   main-is: Main.hs
   other-modules:
       Paths_haskell_wordle
   hs-source-dirs:
-      app
+      app/wordle
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , haskell-wordle
     , random
+  default-language: Haskell2010
+
+executable wordle-bot
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_wordle
+  hs-source-dirs:
+      app/bot
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , haskell-wordle
   default-language: Haskell2010
 
 test-suite haskell-wordle-unit-test
