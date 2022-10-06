@@ -10,6 +10,7 @@ module Lib
   , Status(..)
   , Answer
   , Guess
+  , GuessEval
   ) where
 
 import           Data.List                      ( find
@@ -28,6 +29,8 @@ data Letter = Letter Index Char
 
 data LetterEval = LetterEval Index Char Status
   deriving (Eq, Show)
+
+type GuessEval = [LetterEval]
 
 instance Ord LetterEval where
   (<=) (LetterEval indexN _ _) (LetterEval indexM _ _) = indexN <= indexM
@@ -96,4 +99,5 @@ evaluateGuess answer guess =
 
 guessIsCorrect :: [LetterEval] -> Bool
 guessIsCorrect [] = False
-guessIsCorrect xs = all (\ (LetterEval _ _ status) -> status == CorrectPosition) xs
+guessIsCorrect xs =
+  all (\(LetterEval _ _ status) -> status == CorrectPosition) xs

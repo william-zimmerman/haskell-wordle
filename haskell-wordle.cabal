@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      BotLib
       Lib
   other-modules:
       Paths_haskell_wordle
@@ -64,6 +65,7 @@ test-suite haskell-wordle-unit-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      BotLibSpec
       LibSpec
       Paths_haskell_wordle
   hs-source-dirs:
