@@ -10,17 +10,8 @@ isLogicalGuess = allCorrectLettersMatch
 
 allCorrectLettersMatch :: GuessEval -> [Letter] -> Bool
 allCorrectLettersMatch guessEval guess =
-  let correctLetters = filter
-        (\(LetterEval _ _ status) -> status == CorrectPosition)
+  let requiredLetters = map
+        (\(LetterEval index char CorrectPosition) -> Letter index char)
         guessEval
-  in  all
-        (\(LetterEval index char _) ->
-          guess `letterAtIndex` index == Just (Letter index char)
-        )
-        correctLetters
+  in  all (`elem` guess) requiredLetters
 
-letterAtIndex :: [Letter] -> Int -> Maybe Letter
-letterAtIndex [] _ = Nothing
-letterAtIndex (letter@(Letter i _) : xs) index
-  | index == i = Just letter
-  | otherwise  = letterAtIndex xs index
