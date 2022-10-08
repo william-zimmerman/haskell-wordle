@@ -33,16 +33,16 @@ mainLoop answer = do
             then do
               putStrLn "You solved Wordle!"
             else do
-              putStrLn (formatEval evaluation)
+              putStrLn (formatEntireEvaluation evaluation)
               mainLoop answer
 
-formatEval :: [LetterEval] -> String
-formatEval = concatMap
-  (\(LetterEval _ char status) -> case status of
-    NotInAnswer       -> ['<', char, '>']
-    IncorrectPosition -> ['{', char, '}']
-    CorrectPosition   -> ['[', char, ']']
-  )
+formatEntireEvaluation :: [LetterEval] -> String
+formatEntireEvaluation = concatMap formatSingleEvaluation
+
+formatSingleEvaluation :: LetterEval -> String
+formatSingleEvaluation (NotInAnswer _ char) = ['<', char, '>'] 
+formatSingleEvaluation (IncorrectPosition _ char) = ['{', char, '}']
+formatSingleEvaluation (CorrectPosition _ char) = ['[', char, ']']
 
 getRandomElement :: [a] -> IO a
 getRandomElement xs = do

@@ -7,7 +7,6 @@ module Lib
   , guessIsCorrect
   , Letter(..)
   , LetterEval(..)
-  , Status(..)
   , Answer
   , Guess
   , GuessEval
@@ -17,9 +16,6 @@ import           Data.List                      ( find
                                                 , sort
                                                 )
 
-data Status = NotInAnswer | IncorrectPosition | CorrectPosition
-  deriving(Eq, Show)
-
 type Index = Int
 type Answer = String
 type Guess = String
@@ -27,13 +23,20 @@ type Guess = String
 data Letter = Letter Index Char
   deriving (Eq, Show)
 
-data LetterEval = LetterEval Index Char Status
+data LetterEval = NotInAnswer Index Char |
+                  IncorrectPosition Index Char |
+                  CorrectPosition Index Char
   deriving (Eq, Show)
 
-type GuessEval = [LetterEval]
+getIndex :: LetterEval -> Index
+getIndex (NotInAnswer       index _) = index
+getIndex (IncorrectPosition index _) = index
+getIndex (CorrectPosition   index _) = index
 
 instance Ord LetterEval where
-  (<=) (LetterEval indexN _ _) (LetterEval indexM _ _) = indexN <= indexM
+  (<=) evalA evalB = getIndex evalA <= getIndex evalB
+
+type GuessEval = [LetterEval]
 
 toLetters :: String -> [Letter] -- TODO: It feels like this should be a set?
 toLetters s =
@@ -79,12 +82,11 @@ getLettersInIncorrectPosition answer ((Letter guessIndex guessChar) : xs) =
 evaluateGuess :: Answer -> Guess -> [LetterEval]
 evaluateGuess answer guess =
   sort
-    $  map (\(Letter index char) -> LetterEval index char CorrectPosition)
+    $  map (\(Letter index char) -> CorrectPosition index char)
            lettersInCorrectPosition
-    ++ map (\(Letter index char) -> LetterEval index char IncorrectPosition)
+    ++ map (\(Letter index char) -> IncorrectPosition index char)
            lettersInIncorrectPosition
-    ++ map (\(Letter index char) -> LetterEval index char NotInAnswer)
-           lettersNotInAnswer
+    ++ map (\(Letter index char) -> NotInAnswer index char) lettersNotInAnswer
  where
   answerLetters = toLetters answer
   guessLetters  = toLetters guess
@@ -99,5 +101,7 @@ evaluateGuess answer guess =
 
 guessIsCorrect :: [LetterEval] -> Bool
 guessIsCorrect [] = False
-guessIsCorrect xs =
-  all (\(LetterEval _ _ status) -> status == CorrectPosition) xs
+guessIsCorrect xs = all isCorrect xs
+ where
+  isCorrect (CorrectPosition _ _) = True
+  isCorrect _                     = False

@@ -113,43 +113,43 @@ spec = do
         "should return list with letters not in answer when guess does not overlap with answer"
       $ do
           evaluateGuess "bat" "hop"
-            `shouldBe` [ LetterEval 1 'h' NotInAnswer
-                       , LetterEval 2 'o' NotInAnswer
-                       , LetterEval 3 'p' NotInAnswer
+            `shouldBe` [ NotInAnswer 1 'h'
+                       , NotInAnswer 2 'o'
+                       , NotInAnswer 3 'p'
                        ]
 
     it
         "should return list with letters in correct place when guess equals answer"
       $ do
           evaluateGuess "william" "william"
-            `shouldBe` [ LetterEval 1 'w' CorrectPosition
-                       , LetterEval 2 'i' CorrectPosition
-                       , LetterEval 3 'l' CorrectPosition
-                       , LetterEval 4 'l' CorrectPosition
-                       , LetterEval 5 'i' CorrectPosition
-                       , LetterEval 6 'a' CorrectPosition
-                       , LetterEval 7 'm' CorrectPosition
+            `shouldBe` [ CorrectPosition 1 'w'
+                       , CorrectPosition 2 'i'
+                       , CorrectPosition 3 'l'
+                       , CorrectPosition 4 'l'
+                       , CorrectPosition 5 'i'
+                       , CorrectPosition 6 'a'
+                       , CorrectPosition 7 'm'
                        ]
 
     it "should return list of letter evals in order of their index" $ do
       evaluateGuess "spend" "waxed"
-        `shouldBe` [ LetterEval 1 'w' NotInAnswer
-                   , LetterEval 2 'a' NotInAnswer
-                   , LetterEval 3 'x' NotInAnswer
-                   , LetterEval 4 'e' IncorrectPosition
-                   , LetterEval 5 'd' CorrectPosition
+        `shouldBe` [ NotInAnswer 1 'w'
+                   , NotInAnswer 2 'a'
+                   , NotInAnswer 3 'x'
+                   , IncorrectPosition 4 'e'
+                   , CorrectPosition 5 'd'
                    ]
 
     it
         "should mark the first repeated letter in guess as IncorrectPosition and the second as NotInAnswer"
       $ do
           evaluateGuess "planet" "apples"
-            `shouldBe` [ LetterEval 1 'a' IncorrectPosition
-                       , LetterEval 2 'p' IncorrectPosition
-                       , LetterEval 3 'p' NotInAnswer
-                       , LetterEval 4 'l' IncorrectPosition
-                       , LetterEval 5 'e' CorrectPosition
-                       , LetterEval 6 's' NotInAnswer
+            `shouldBe` [ IncorrectPosition 1 'a'
+                       , IncorrectPosition 2 'p'
+                       , NotInAnswer 3 'p'
+                       , IncorrectPosition 4 'l' 
+                       , CorrectPosition 5 'e' 
+                       , NotInAnswer 6 's' 
                        ]
 
   describe "guessIsCorrect" $ do
@@ -158,17 +158,17 @@ spec = do
 
     it "should return true if all elements are in correct position" $ do
       guessIsCorrect
-          [ LetterEval 1 'a' CorrectPosition
-          , LetterEval 2 'b' CorrectPosition
-          , LetterEval 3 'c' CorrectPosition
+          [ CorrectPosition 1 'a' 
+          , CorrectPosition 2 'b' 
+          , CorrectPosition 3 'c' 
           ]
         `shouldBe` True
 
     it "should return false if single element is not in answer" $ do
       guessIsCorrect
-        [LetterEval 1 'a' CorrectPosition, LetterEval 2 'b' NotInAnswer]
+        [CorrectPosition 1 'a', NotInAnswer 2 'b']
         `shouldBe` False
     
     it "should return false if single element is in incorrect position" $ do
-      guessIsCorrect [LetterEval 1 'a' CorrectPosition, LetterEval 2 'b' IncorrectPosition]
+      guessIsCorrect [CorrectPosition 1 'a', IncorrectPosition 2 'b']
       `shouldBe` False
