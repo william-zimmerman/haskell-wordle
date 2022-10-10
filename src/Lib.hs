@@ -23,6 +23,9 @@ type Guess = String
 data Letter = Letter Index Char
   deriving (Eq, Show)
 
+instance Ord Letter where
+  (<=) (Letter indexA _) (Letter indexB _) = indexA <= indexB
+
 data LetterEval = NotInAnswer Index Char |
                   IncorrectPosition Index Char |
                   CorrectPosition Index Char

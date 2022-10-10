@@ -6,14 +6,40 @@ import           Lib
 
 isLogicalGuess :: GuessEval -> [Letter] -> Bool
 -- isLogicalGuess [] _ = True -- Does this make sense?
-isLogicalGuess = allCorrectLettersMatch
+isLogicalGuess eval guess =
+  allCorrectLettersMatch eval guess
+    && allLettersInIncorrectPositionAreInGuess eval guess
 
 allCorrectLettersMatch :: GuessEval -> [Letter] -> Bool
 allCorrectLettersMatch guessEval guess =
-  let requiredLetters = [Letter index char | (CorrectPosition index char) <- guessEval]
+  let requiredLetters =
+        [ Letter index char | (CorrectPosition index char) <- guessEval ]
   in  all (`elem` guess) requiredLetters
 
--- allLettersInIncorrectPositionAreInGuess :: GuessEval -> [Letter] -> Bool
--- Identify all letters in incorrect position from GuessEval
--- Remove all letters from guess that have matched to letters in correct position
--- iterate over letters in incorrect position and match them to remaining letters in guess
+allLettersInIncorrectPositionAreInGuess :: GuessEval -> [Letter] -> Bool
+allLettersInIncorrectPositionAreInGuess guessEval guess =
+  let lettersInCorrectPosition =
+        [ Letter index char | (CorrectPosition index char) <- guessEval ]
+      guessWithoutCorrectLetters = guess `without` lettersInCorrectPosition
+      lettersInIncorrectPosition =
+        [ Letter index char | (IncorrectPosition index char) <- guessEval ]
+  in  incorrectPositionsMatch lettersInIncorrectPosition
+                              guessWithoutCorrectLetters
+
+incorrectPositionsMatch :: [Letter] -> [Letter] -> Bool
+incorrectPositionsMatch [] _  = True
+incorrectPositionsMatch _  [] = False
+incorrectPositionsMatch (evalLetter@(Letter _ char) : xs) guess =
+  evalLetter `existsAtDifferentIndex` guess && incorrectPositionsMatch
+    xs
+    (popFirst char guess)
+ where
+  existsAtDifferentIndex _ [] = False
+  existsAtDifferentIndex targetLetter@(Letter evalIndex evalChar) ((Letter guessIndex guessChar) : ys)
+    | (evalChar == guessChar) && (evalIndex /= guessIndex)
+    = True
+    | otherwise
+    = existsAtDifferentIndex targetLetter ys
+  popFirst _ [] = []
+  popFirst targetChar ((Letter _ c) : ys) | targetChar == c = ys
+                                          | otherwise = popFirst targetChar ys
