@@ -4,19 +4,19 @@ module BotLib
 
 import           Lib
 
-isLogicalGuess :: GuessEval -> [Letter] -> Bool
+isLogicalGuess :: GuessEval -> Guess -> Bool
 -- isLogicalGuess [] _ = True -- Does this make sense?
 isLogicalGuess eval guess =
   allCorrectLettersMatch eval guess
     && allLettersInIncorrectPositionAreInGuess eval guess
 
-allCorrectLettersMatch :: GuessEval -> [Letter] -> Bool
+allCorrectLettersMatch :: GuessEval -> Guess -> Bool
 allCorrectLettersMatch guessEval guess =
   let requiredLetters =
         [ Letter index char | (CorrectPosition index char) <- guessEval ]
   in  all (`elem` guess) requiredLetters
 
-allLettersInIncorrectPositionAreInGuess :: GuessEval -> [Letter] -> Bool
+allLettersInIncorrectPositionAreInGuess :: GuessEval -> Guess -> Bool
 allLettersInIncorrectPositionAreInGuess guessEval guess =
   let lettersInCorrectPosition =
         [ Letter index char | (CorrectPosition index char) <- guessEval ]
@@ -26,7 +26,7 @@ allLettersInIncorrectPositionAreInGuess guessEval guess =
   in  incorrectPositionsMatch lettersInIncorrectPosition
                               guessWithoutCorrectLetters
 
-incorrectPositionsMatch :: [Letter] -> [Letter] -> Bool
+incorrectPositionsMatch :: [Letter] -> Guess -> Bool
 incorrectPositionsMatch [] _  = True
 incorrectPositionsMatch _  [] = False
 incorrectPositionsMatch (evalLetter@(Letter _ char) : xs) guess =
