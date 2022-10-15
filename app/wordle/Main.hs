@@ -20,7 +20,7 @@ getAnswerFromFile = do
   let allPotentialAnswers = lines fileContents
   getRandomElement allPotentialAnswers
 
-mainLoop :: Answer -> IO ()
+mainLoop :: String -> IO ()
 mainLoop answer = do
   putStr "> "
   guess <- getLine
@@ -28,7 +28,7 @@ mainLoop answer = do
     then do
       putStrLn ("The word was '" ++ answer ++ "'")
     else
-      let evaluation = evaluateGuess answer guess
+      let evaluation = evaluateGuess (toLetters answer) (toLetters guess)
       in  if guessIsCorrect evaluation
             then do
               putStrLn "You solved Wordle!"

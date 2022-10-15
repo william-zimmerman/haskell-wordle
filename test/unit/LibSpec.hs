@@ -112,7 +112,7 @@ spec = do
     it
         "should return list with letters not in answer when guess does not overlap with answer"
       $ do
-          evaluateGuess "bat" "hop"
+          evaluateGuess (toLetters "bat") (toLetters "hop")
             `shouldBe` [ NotInAnswer 1 'h'
                        , NotInAnswer 2 'o'
                        , NotInAnswer 3 'p'
@@ -121,7 +121,7 @@ spec = do
     it
         "should return list with letters in correct place when guess equals answer"
       $ do
-          evaluateGuess "william" "william"
+          evaluateGuess (toLetters "william") (toLetters "william")
             `shouldBe` [ CorrectPosition 1 'w'
                        , CorrectPosition 2 'i'
                        , CorrectPosition 3 'l'
@@ -132,7 +132,7 @@ spec = do
                        ]
 
     it "should return list of letter evals in order of their index" $ do
-      evaluateGuess "spend" "waxed"
+      evaluateGuess (toLetters "spend") (toLetters "waxed")
         `shouldBe` [ NotInAnswer 1 'w'
                    , NotInAnswer 2 'a'
                    , NotInAnswer 3 'x'
@@ -143,7 +143,7 @@ spec = do
     it
         "should mark the first repeated letter in guess as IncorrectPosition and the second as NotInAnswer"
       $ do
-          evaluateGuess "planet" "apples"
+          evaluateGuess (toLetters "planet") (toLetters "apples")
             `shouldBe` [ IncorrectPosition 1 'a'
                        , IncorrectPosition 2 'p'
                        , NotInAnswer 3 'p'

@@ -17,15 +17,17 @@ import           Data.List                      ( find
                                                 )
 
 type Index = Int
-type Answer = String
-type Guess = String
 
 data Letter = Letter Index Char
   deriving (Eq, Show)
 
+type Guess = [Letter]
+type Answer = [Letter]
+
 instance Ord Letter where
   (<=) (Letter indexA _) (Letter indexB _) = indexA <= indexB
 
+-- TODO: Should these take Letters instead of Index Char?
 data LetterEval = NotInAnswer Index Char |
                   IncorrectPosition Index Char |
                   CorrectPosition Index Char
@@ -91,15 +93,13 @@ evaluateGuess answer guess =
            lettersInIncorrectPosition
     ++ map (\(Letter index char) -> NotInAnswer index char) lettersNotInAnswer
  where
-  answerLetters = toLetters answer
-  guessLetters  = toLetters guess
   lettersInCorrectPosition =
-    getLettersInCorrectPosition answerLetters guessLetters
+    getLettersInCorrectPosition answer guess
   lettersInIncorrectPosition = getLettersInIncorrectPosition
-    (answerLetters `without` lettersInCorrectPosition)
-    (guessLetters `without` lettersInCorrectPosition)
+    (answer `without` lettersInCorrectPosition)
+    (guess `without` lettersInCorrectPosition)
   lettersNotInAnswer =
-    (guessLetters `without` lettersInCorrectPosition)
+    (guess `without` lettersInCorrectPosition)
       `without` lettersInIncorrectPosition
 
 guessIsCorrect :: [LetterEval] -> Bool
