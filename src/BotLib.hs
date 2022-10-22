@@ -10,6 +10,28 @@ isLogicalGuess eval guess =
   allCorrectLettersMatch eval guess
     && allLettersInIncorrectPositionAreInGuess eval guess
 
+filterOutCorrectLetters :: GuessEval -> Guess -> (Bool, Guess)
+filterOutCorrectLetters guessEval guess =
+  let
+    lettersInCorrectPosition =
+      [ Letter index char | (CorrectPosition index char) <- guessEval ]
+    guessWithoutCorrectLetters = guess `without` lettersInCorrectPosition
+    allLettersInCorrectPositionMatch =
+      all (`elem` guess) lettersInCorrectPosition
+  in
+    (allLettersInCorrectPositionMatch, guessWithoutCorrectLetters)
+
+-- filterOutLettersInIncorrectPosition :: GuessEval -> Guess -> (Bool, Guess)
+-- filterOutLettersInIncorrectPosition guessEval guessWithoutCorrectLetters = 
+--   let
+--     lettersInIncorrectPosition = [ Letter index char | (IncorrectPosition index char) <- guessEval ]
+    
+
+-- firstWithSameCharDifferentIndex :: Letter -> [Letter] -> Maybe Letter
+-- firstWithSameCharDifferentIndex _ [] -> Nothing
+-- firstWithSameCharDifferentIndex (Letter targetIndex targetChar) (Letter(index char):xs)
+--   |  
+
 allCorrectLettersMatch :: GuessEval -> Guess -> Bool
 allCorrectLettersMatch guessEval guess =
   let requiredLetters =
