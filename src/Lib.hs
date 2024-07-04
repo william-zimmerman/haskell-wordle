@@ -5,11 +5,14 @@ module Lib
   , without
   , evaluateGuess
   , guessIsCorrect
+  , getIndex
+  , charOf
   , Letter(..)
   , LetterEval(..)
   , Answer
   , Guess
   , GuessEval
+  , Index
   ) where
 
 import           Data.List                      ( find
@@ -28,6 +31,7 @@ instance Ord Letter where
   (<=) (Letter indexA _) (Letter indexB _) = indexA <= indexB
 
 -- TODO: Should these take Letters instead of Index Char?
+-- TODO: Does it make sense to use a Typeclass here to expose similar traits between Letter and LetterEval (e.g. index and char)
 data LetterEval = NotInAnswer Index Char |
                   IncorrectPosition Index Char |
                   CorrectPosition Index Char
@@ -37,6 +41,11 @@ getIndex :: LetterEval -> Index
 getIndex (NotInAnswer       index _) = index
 getIndex (IncorrectPosition index _) = index
 getIndex (CorrectPosition   index _) = index
+
+charOf :: LetterEval -> Char
+charOf (NotInAnswer _ char) = char
+charOf (IncorrectPosition _ char) = char
+charOf (CorrectPosition _ char) = char
 
 instance Ord LetterEval where
   (<=) evalA evalB = getIndex evalA <= getIndex evalB

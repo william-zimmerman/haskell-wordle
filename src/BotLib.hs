@@ -2,66 +2,61 @@ module BotLib
   ( isLogicalGuess
   ) where
 
+import           Data.List                      ( delete,find )
 import           Lib
 
 isLogicalGuess :: GuessEval -> Guess -> Bool
--- isLogicalGuess [] _ = True -- Does this make sense?
-isLogicalGuess eval guess =
-  allCorrectLettersMatch eval guess
-    && allLettersInIncorrectPositionAreInGuess eval guess
-
-filterOutCorrectLetters :: GuessEval -> Guess -> (Bool, Guess)
-filterOutCorrectLetters guessEval guess =
-  let
-    lettersInCorrectPosition =
-      [ Letter index char | (CorrectPosition index char) <- guessEval ]
-    guessWithoutCorrectLetters = guess `without` lettersInCorrectPosition
-    allLettersInCorrectPositionMatch =
-      all (`elem` guess) lettersInCorrectPosition
-  in
-    (allLettersInCorrectPositionMatch, guessWithoutCorrectLetters)
-
--- filterOutLettersInIncorrectPosition :: GuessEval -> Guess -> (Bool, Guess)
--- filterOutLettersInIncorrectPosition guessEval guessWithoutCorrectLetters = 
---   let
---     lettersInIncorrectPosition = [ Letter index char | (IncorrectPosition index char) <- guessEval ]
+isLogicalGuess guessEval guess =
+  allCorrectPositionsMatchOnPosition guessEval guess
+    && noIncorrectPositionsMatchOnPosition guessEval guess
+  where
+    remainingMatches = getMatches guessEval guess
+    unmatchedEvals = map fst remainingMatches
+    allUnmatchedEvalsAreNotInAnswer = all 
+      (\case 
+        (NotInAnswer _ _) -> True
+        _ -> False
+      ) unmatchedEvals
     
 
--- firstWithSameCharDifferentIndex :: Letter -> [Letter] -> Maybe Letter
--- firstWithSameCharDifferentIndex _ [] -> Nothing
--- firstWithSameCharDifferentIndex (Letter targetIndex targetChar) (Letter(index char):xs)
---   |  
-
-allCorrectLettersMatch :: GuessEval -> Guess -> Bool
-allCorrectLettersMatch guessEval guess =
+allCorrectPositionsMatchOnPosition :: GuessEval -> Guess -> Bool
+allCorrectPositionsMatchOnPosition guessEval guess =
   let requiredLetters =
         [ Letter index char | (CorrectPosition index char) <- guessEval ]
   in  all (`elem` guess) requiredLetters
 
-allLettersInIncorrectPositionAreInGuess :: GuessEval -> Guess -> Bool
-allLettersInIncorrectPositionAreInGuess guessEval guess =
-  let lettersInCorrectPosition =
-        [ Letter index char | (CorrectPosition index char) <- guessEval ]
-      guessWithoutCorrectLetters = guess `without` lettersInCorrectPosition
-      lettersInIncorrectPosition =
+noIncorrectPositionsMatchOnPosition :: GuessEval -> Guess -> Bool
+noIncorrectPositionsMatchOnPosition guessEval guess =
+  let incorrectLetters =
         [ Letter index char | (IncorrectPosition index char) <- guessEval ]
-  in  incorrectPositionsMatch lettersInIncorrectPosition
-                              guessWithoutCorrectLetters
+  in  not $ any (`elem` guess) incorrectLetters
 
-incorrectPositionsMatch :: [Letter] -> Guess -> Bool
-incorrectPositionsMatch [] _  = True
-incorrectPositionsMatch _  [] = False
-incorrectPositionsMatch (evalLetter@(Letter _ char) : xs) guess =
-  evalLetter `existsAtDifferentIndex` guess && incorrectPositionsMatch
-    xs
-    (popFirst char guess)
- where
-  existsAtDifferentIndex _ [] = False
-  existsAtDifferentIndex targetLetter@(Letter evalIndex evalChar) ((Letter guessIndex guessChar) : ys)
-    | (evalChar == guessChar) && (evalIndex /= guessIndex)
-    = True
-    | otherwise
-    = existsAtDifferentIndex targetLetter ys
-  popFirst _ [] = []
-  popFirst targetChar ((Letter _ c) : ys) | targetChar == c = ys
-                                          | otherwise = popFirst targetChar ys
+getMatches :: GuessEval -> Guess -> [(LetterEval, Letter)]
+getMatches [] _ = []
+getMatches _ [] = []
+getMatches guessEval (x:xs) = 
+  let maybeLetterEvalMatch = findMatchingEval guessEval x
+  in case maybeLetterEvalMatch of
+    Just match -> (match, x) : getMatches (delete match guessEval) xs
+    Nothing -> getMatches guessEval xs
+
+atIndex :: GuessEval -> Index -> Maybe LetterEval
+atIndex [] _ = Nothing
+atIndex (x : xs) index | getIndex x == index = Just x
+                       | otherwise           = xs `atIndex` index
+
+-- TODO: Maybe this should be renamed findMatchingLetterInCorrectOrIncorrectPosition
+findMatchingEval :: GuessEval -> Letter -> Maybe LetterEval
+findMatchingEval [] _ = Nothing
+findMatchingEval guessEval (Letter letterIndex letterChar) =
+  let firstInIncorrectPosition char = find
+        (\case
+          (IncorrectPosition _ incorrectChar) -> char == incorrectChar
+          _ -> False
+        )
+  in  case guessEval `atIndex` letterIndex of
+        Just letterEval@(CorrectPosition _ correctChar)
+          | correctChar == letterChar -> Just letterEval
+        Just (IncorrectPosition _ _) ->
+          firstInIncorrectPosition letterChar guessEval
+        _ -> firstInIncorrectPosition letterChar guessEval

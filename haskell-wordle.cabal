@@ -31,6 +31,8 @@ library
       Paths_haskell_wordle
   hs-source-dirs:
       src
+  default-extensions:
+      LambdaCase
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
@@ -42,6 +44,8 @@ executable wordle
       Paths_haskell_wordle
   hs-source-dirs:
       app/wordle
+  default-extensions:
+      LambdaCase
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -55,6 +59,8 @@ executable wordle-bot
       Paths_haskell_wordle
   hs-source-dirs:
       app/bot
+  default-extensions:
+      LambdaCase
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
@@ -70,6 +76,8 @@ test-suite haskell-wordle-unit-test
       Paths_haskell_wordle
   hs-source-dirs:
       test/unit
+  default-extensions:
+      LambdaCase
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
