@@ -1,7 +1,7 @@
 ## TODO
 - [x] display hello world web page  
 - [x] rename wordle to wordle-cli  
-- [ ] have application load list of words from source  
+- [x] have application load list of words from source  
 - [ ] web application displays list of words  
 - [ ] application connects to a database  
 - [ ] display list of words from database  

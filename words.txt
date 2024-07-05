@@ -10,3 +10,5 @@ heart
 front
 quest
 crown
+quest
+peach
