@@ -55,21 +55,6 @@ executable web
     , text
   default-language: Haskell2010
 
-executable wordle
-  main-is: Main.hs
-  other-modules:
-      Paths_haskell_wordle
-  hs-source-dirs:
-      app/wordle
-  default-extensions:
-      LambdaCase
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , haskell-wordle
-    , random
-  default-language: Haskell2010
-
 executable wordle-bot
   main-is: Main.hs
   other-modules:
@@ -82,6 +67,21 @@ executable wordle-bot
   build-depends:
       base >=4.7 && <5
     , haskell-wordle
+  default-language: Haskell2010
+
+executable wordle-cli
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_wordle
+  hs-source-dirs:
+      app/wordle-cli
+  default-extensions:
+      LambdaCase
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , haskell-wordle
+    , random
   default-language: Haskell2010
 
 test-suite haskell-wordle-unit-test

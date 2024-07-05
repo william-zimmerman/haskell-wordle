@@ -39,9 +39,9 @@ library:
   source-dirs: src
 
 executables:
-  wordle:
+  wordle-cli:
     main:                Main.hs
-    source-dirs:         app/wordle
+    source-dirs:         app/wordle-cli
     ghc-options:
     - -threaded
     - -rtsopts
