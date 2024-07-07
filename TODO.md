@@ -3,8 +3,9 @@
 - [x] rename wordle to wordle-cli  
 - [x] have application load list of words from source  
 - [x] web application displays list of words
-- [ ] web application displays single random word
+- [x] web application displays single random word
 - [ ] display hello world JS page
+- [ ] display random word vs JS
 - [ ] web application asks backend for random word and displays it
 - [ ] user can make a guess 
 - [ ] application connects to a database  

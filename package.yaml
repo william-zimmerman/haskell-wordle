@@ -72,6 +72,7 @@ executables:
     - Spock
     - mtl
     - text
+    - random
 
 tests:
   haskell-wordle-unit-test:
