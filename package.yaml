@@ -74,6 +74,7 @@ executables:
     - text
     - random
     - blaze-html
+    - wai-middleware-static
 
 tests:
   haskell-wordle-unit-test:

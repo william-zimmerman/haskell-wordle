@@ -3,6 +3,7 @@
 module Main (Main.main) where
 
 import qualified Data.Text as T
+import Network.Wai.Middleware.Static (addBase, staticPolicy)
 import System.Random.Stateful (getStdRandom, randomR)
 import Text.Blaze.Html.Renderer.String (renderHtml)
 import Text.Blaze.Html5 as H
@@ -10,16 +11,17 @@ import Text.Blaze.Html5 as H
     body,
     docTypeHtml,
     head,
-    p,
-    span,
+    script,
     title,
-    toHtml,
+    (!),
   )
+import qualified Text.Blaze.Html5.Attributes as A
 import Web.Spock
   ( HasSpock (getState),
     SpockM,
     get,
     html,
+    middleware,
     root,
     runSpock,
     spock,
@@ -53,12 +55,12 @@ app :: SpockM () MySession MyAppState ()
 app =
   do
     (InitState answer) <- getState
-    get root $ Web.Spock.html $ T.pack (renderHtml $ generateHtml answer)
+    middleware $ staticPolicy (addBase "static")
+    get root $ Web.Spock.html $ T.pack (renderHtml generateHtml)
 
-generateHtml :: String -> Html
-generateHtml answer = docTypeHtml $ do
+generateHtml :: Html
+generateHtml = docTypeHtml $ do
   H.head $
     H.title "Haskell wordle"
   H.body $ do
-    H.p "Welcome to Haskell wordle!"
-    H.span $ toHtml ("Answer: " ++ answer)
+    H.script ! A.src "js/script.js" $ ""
