@@ -1,16 +1,28 @@
-module Main (main) where
+{-# LANGUAGE OverloadedStrings #-}
+
+module Main (Main.main) where
 
 import qualified Data.Text as T
 import System.Random.Stateful (getStdRandom, randomR)
-import Text.Printf (printf)
+import Text.Blaze.Html.Renderer.String (renderHtml)
+import Text.Blaze.Html5 as H
+  ( Html,
+    body,
+    docTypeHtml,
+    head,
+    p,
+    span,
+    title,
+    toHtml,
+  )
 import Web.Spock
   ( HasSpock (getState),
     SpockM,
     get,
+    html,
     root,
     runSpock,
     spock,
-    text,
   )
 import Web.Spock.Config
   ( PoolOrConn (PCNoDatabase),
@@ -41,4 +53,12 @@ app :: SpockM () MySession MyAppState ()
 app =
   do
     (InitState answer) <- getState
-    get root $ text $ T.pack (printf "Answer: %s" answer)
+    get root $ Web.Spock.html $ T.pack (renderHtml $ generateHtml answer)
+
+generateHtml :: String -> Html
+generateHtml answer = docTypeHtml $ do
+  H.head $
+    H.title "Haskell wordle"
+  H.body $ do
+    H.p "Welcome to Haskell wordle!"
+    H.span $ toHtml ("Answer: " ++ answer)

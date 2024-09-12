@@ -50,6 +50,7 @@ executable web
   build-depends:
       Spock
     , base >=4.7 && <5
+    , blaze-html
     , haskell-wordle
     , mtl
     , random

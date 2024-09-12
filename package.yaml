@@ -73,6 +73,7 @@ executables:
     - mtl
     - text
     - random
+    - blaze-html
 
 tests:
   haskell-wordle-unit-test:
