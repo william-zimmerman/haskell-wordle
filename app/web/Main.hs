@@ -25,6 +25,7 @@ import Web.Spock
     root,
     runSpock,
     spock,
+    text,
   )
 import Web.Spock.Config
   ( PoolOrConn (PCNoDatabase),
@@ -57,6 +58,7 @@ app =
     (InitState answer) <- getState
     middleware $ staticPolicy (addBase "static")
     get root $ Web.Spock.html $ T.pack (renderHtml generateHtml)
+    get "answer" $ Web.Spock.text $ T.pack answer
 
 generateHtml :: Html
 generateHtml = docTypeHtml $ do
