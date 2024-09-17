@@ -8,7 +8,7 @@
 - [x] display hello world using some javascript
 - [x] display random word vs JS
 - [x] web application asks backend for random word and displays it
-- [ ] user can make a guess with basic acknowledgement, no validation (round tripping the guess)
+- [x] user can make a guess with basic acknowledgement, no validation (round tripping the guess)
 - [ ] guess is validated for appropriate length
 - [ ] user is given feedback on guess (number of correct letters, etc)
 - [ ] application connects to a database  

@@ -3,6 +3,7 @@
 module Main (Main.main) where
 
 import qualified Data.Text as T
+import Lib (AnswerResponse (AnswerResponse), GuessResponse (GuessResponse))
 import Network.Wai.Middleware.Static (addBase, staticPolicy)
 import System.Random.Stateful (getStdRandom, randomR)
 import Text.Blaze.Html.Renderer.String (renderHtml)
@@ -16,17 +17,7 @@ import Text.Blaze.Html5 as H
     (!),
   )
 import qualified Text.Blaze.Html5.Attributes as A
-import Web.Spock
-  ( HasSpock (getState),
-    SpockM,
-    get,
-    html,
-    middleware,
-    root,
-    runSpock,
-    spock,
-    text,
-  )
+import Web.Spock (HasSpock (getState), SpockM, get, html, json, middleware, root, runSpock, spock, text, var, (<//>))
 import Web.Spock.Config
   ( PoolOrConn (PCNoDatabase),
     defaultSpockCfg,
@@ -58,7 +49,8 @@ app =
     (InitState answer) <- getState
     middleware $ staticPolicy (addBase "static")
     get root $ Web.Spock.html $ T.pack (renderHtml generateHtml)
-    get "answer" $ Web.Spock.text $ T.pack answer
+    get "answer" $ Web.Spock.json (AnswerResponse answer)
+    get ("guess" <//> var) $ \value -> Web.Spock.json (GuessResponse value)
 
 generateHtml :: Html
 generateHtml = docTypeHtml $ do
